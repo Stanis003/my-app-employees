@@ -1,6 +1,9 @@
 import { Component } from 'react';
+
 import './employees-add-form.css'
+
 class EmployeeAddForm extends Component  {
+
     constructor(props){
         super(props)
         this.state = {
@@ -8,19 +11,31 @@ class EmployeeAddForm extends Component  {
             salary: ''
         }
     }
+
     onValueChange = (e) => {
         this.setState({
            [e.target.name]: e.target.value
         })
     }
-    render (){
 
+    onSubmit = (e) =>{
+        e.preventDefault();
+        this.props.addItem(this.state.name, this.state.salary);
+        this.setState({
+            name: '',
+            salary: ''
+        })
+
+    }
+
+    render (){
         const {name, salary} = this.state;
         return (
             <div className="app-add-form">
             <h3>Add new employee</h3>
             <form 
-                className="add-form d-flex">
+                className="add-form d-flex"
+                onSubmit={this.onSubmit}>
                 <input type="text"
                     className="form-control new-post-label" 
                     placeholder="Whats her name" 
@@ -29,7 +44,7 @@ class EmployeeAddForm extends Component  {
                     onChange={this.onValueChange}/>
                 <input type="number"
                     className="form-control new-post-label"
-                    placeholder="Wage in $?" 
+                    placeholder="Salary in $?" 
                     name="salary" 
                     value={salary}
                     onChange={this.onValueChange}/>
@@ -39,5 +54,6 @@ class EmployeeAddForm extends Component  {
         </div>
         )
     }
+
 }
 export default EmployeeAddForm;

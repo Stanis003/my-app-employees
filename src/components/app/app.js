@@ -13,11 +13,12 @@ class App extends Component {
         super(props)
             this.state={
                 data: [
-                    {name:'John C.', salary: 800, increase:true, id: 1},
-                    {name:'Max W.', salary: 3000, increase:false, id: 2},
-                    {name:'Lex C.', salary: 15000, increase:false, id: 3}
+                    {name:'John C.', salary: 800, increase:true, rise: false, id: 1},
+                    {name:'Max W.', salary: 3000, increase:false, rise: true, id: 2},
+                    {name:'Lex C.', salary: 15000, increase:false, rise: false, id: 3}
                 ]
             }
+            this.maxIdd= 4;
     }
 
     deleteItem = (id) =>{
@@ -29,10 +30,49 @@ class App extends Component {
 
         })
     }
+    onToggleIncrease = (id) => {
+
+           this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, increase: !item.increase}
+                }
+                return item;
+            })
+        }))
+    }
+    onToggleRise = (id) => {
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return {...item, rise: !item.rise}
+                }
+                return item;
+            })
+        }))
+    }
+    addItem = (name, salary) => {
+        const newItem = {
+            name,
+            salary,
+            increase: false,
+            rise: false,
+            id: this.maxIdd++
+        }
+        this.setState(({data})=>{
+            const newArr = [...data, newItem];
+            return {
+                data: newArr
+            }
+        });
+    }
     render(){
+        const employees = this.state.data.length;
+        const encreased = this.state.data.filter(item=>item.increase).length;
         return(
             <div className="app"> 
-                 <AppInfo/>
+                 <AppInfo
+                 employees={employees} encreased={encreased}/>
      
                  <div className="searh-panel">
                  <SearchPanel/>
@@ -40,8 +80,12 @@ class App extends Component {
                  </div>  
                  <EmployeesList 
                  data={this.state.data}
-                 onDelete={this.deleteItem}/>
-                 <EmployeeAddForm/>
+                 onDelete={this.deleteItem}
+                 onToggleIncrease={this.onToggleIncrease}
+                 onToggleRise={this.onToggleRise}
+                 />
+                 <EmployeeAddForm
+                 addItem={this.addItem}/>
             </div>
           
          )
